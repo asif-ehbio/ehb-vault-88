@@ -3,48 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EHB | Final Vault</title>
+    <title>EHB | Dual Vault v8.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg-dark: #000; --bg-light: #fff; --grey-text: #5f6368; --blue-link: #1a73e8; --accent: #00ffcc; }
+        :root { --accent: #00ffcc; --blue: #1a73e8; }
         body, html { margin: 0; padding: 0; background: #000; font-family: 'Roboto', sans-serif; height: 100%; overflow: hidden; }
         
-        /* 🔒 Login System */
-        #login-screen { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000; }
-        input { padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; margin-bottom: 10px; text-align: center; }
+        /* 🔒 Login Screen */
+        #login-screen { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000; z-index: 1000; position: relative; }
+        input { padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; margin-bottom: 10px; text-align: center; outline: none; }
 
-        /* 📱 Main Interface */
+        /* 📱 UI Layout */
         #vault-ui { display: none; height: 100%; flex-direction: column; }
-        .nav-tabs { display: flex; background: #111; padding: 10px; gap: 10px; flex-shrink: 0; }
-        .tab { flex: 1; padding: 10px; border: none; background: #222; color: #fff; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .nav-tabs { display: flex; background: #000; padding: 8px; gap: 8px; flex-shrink: 0; border-bottom: 1px solid #222; }
+        .tab { flex: 1; padding: 12px; border: none; background: #1a1a1a; color: #888; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px; }
         .tab.active { background: var(--accent); color: #000; }
 
         /* 📸 Capture Area */
-        #capture-area { background: #fff; color: #000; flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        #capture-area { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
         
-        /* Black Status & App Bars */
-        .status-bar { display: flex; justify-content: space-between; padding: 5px 15px; background: #000; color:#fff; font-size: 14px; align-items: center; }
-        .app-icons-bar { background: #000; color: #fff; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
-        .nav-icons-white { background: #fff; padding: 10px 15px; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; font-size: 18px; color: #555; }
+        /* 🔋 Universal Status Bar */
+        .status-bar { display: flex; justify-content: space-between; padding: 6px 15px; font-size: 14px; align-items: center; z-index: 10; }
+        .status-bar.white-mode { background: #000; color: #fff; }
+        .status-bar.dark-mode { background: #000; color: #fff; } /* Gmail dark uses black top bar */
 
-        /* Gray Info Section */
-        .email-info-box { padding: 12px 15px; background: #f1f3f4; border-bottom: 1px solid #e0e0e0; font-size: 14px; position: relative; }
-        .email-controls { display: flex; gap: 10px; margin-top: 10px; font-size: 13px; color: #5f6368; }
-        .control-chip { background: #fff; border: 1px solid #ddd; padding: 5px 12px; border-radius: 5px; display: flex; align-items: center; gap: 5px; }
-
-        /* White Content Body */
-        .main-content { padding: 20px 15px; flex-grow: 1; background: #fff; }
-        .headline { font-size: 26px; font-weight: 900; margin: 10px 0; color: #000; outline: none; }
-        .lang-section { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
-        .body-text { font-size: 16px; line-height: 1.5; color: #202124; outline: none; }
-        .fb-link { color: var(--blue-link); text-decoration: underline; word-break: break-all; font-size: 14px; }
-
+        .sb-right { display: flex; align-items: center; gap: 8px; }
+        .bat-shell { width: 22px; height: 11px; border: 1.5px solid #fff; border-radius: 2px; padding: 1px; position: relative; }
+        .bat-fill { height: 100%; background: #fff; transition: width 0.3s; }
         .editable { outline: none; border-bottom: 1px dashed transparent; }
-        .editable:focus { border-bottom: 1px dashed var(--blue-link); }
+        .editable:focus { border-bottom: 1px dashed var(--blue); }
+
+        /* ================= 1. IMPOSTER TEMPLATE (White) ================= */
+        #imposter-temp { background: #fff; color: #000; min-height: 100%; display: flex; flex-direction: column; }
+        .imp-header-icons { background: #000; color: #fff; padding: 12px 15px; display: flex; justify-content: space-between; }
+        .imp-info-gray { background: #f1f3f4; padding: 12px 15px; border-bottom: 1px solid #ddd; font-size: 14px; }
+        .imp-body { padding: 20px 15px; background: #fff; }
+        .imp-title { font-size: 24px; font-weight: 900; margin-bottom: 15px; color: #000; }
+        .imp-link { color: var(--blue); text-decoration: underline; font-size: 14px; word-break: break-all; }
+
+        /* ================= 2. COPYRIGHT TEMPLATE (Dark) ================= */
+        #copyright-temp { background: #000; color: #e8eaed; min-height: 100%; display: flex; flex-direction: column; }
+        .cp-header { display: flex; justify-content: space-between; padding: 12px 15px; font-size: 20px; color: #fff; }
+        .cp-subject { font-size: 22px; font-weight: 500; padding: 10px 15px; color: #fff; }
+        .cp-sender { display: flex; align-items: center; padding: 10px 15px; margin-bottom: 15px; }
+        .cp-avatar { width: 45px; height: 45px; background: #e91e63; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; margin-right: 15px; }
+        .cp-content { font-size: 15px; line-height: 1.6; color: #bdc1c6; padding: 15px; border-top: 1px solid #333; }
 
         /* Footer */
-        .footer-area { padding: 12px; background: #000; flex-shrink: 0; }
+        .footer-save { padding: 12px; background: #000; flex-shrink: 0; }
         .save-btn { width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; }
         .hidden { display: none; }
     </style>
@@ -52,100 +59,119 @@
 <body>
 
     <div id="login-screen">
-        <h2 style="color:var(--accent);">EHB CEO VAULT v7.0</h2>
-        <input type="password" id="pass" placeholder="Enter Password">
-        <button onclick="unlock()" style="padding:10px 30px; background:var(--accent); border:none; border-radius:20px; font-weight:bold;">ACCESS</button>
+        <h2 style="color:var(--accent);">EHB VAULT v8.0</h2>
+        <input type="password" id="pass" placeholder="Enter CEO Password">
+        <button onclick="unlockVault()" style="padding:12px 30px; background:var(--accent); border:none; border-radius:25px; font-weight:bold; cursor:pointer;">ACCESS HUB</button>
     </div>
 
     <div id="vault-ui">
         <div class="nav-tabs">
-            <button class="tab active" onclick="setView('imposter')">Imposter (New)</button>
-            <button class="tab" onclick="setView('copyright')">Copyright Hub</button>
+            <button id="tab-imp" class="tab active" onclick="switchView('imposter')">Imposter (New)</button>
+            <button id="tab-cp" class="tab" onclick="switchView('copyright')">Copyright Hub</button>
         </div>
 
         <div id="capture-area">
-            <div class="status-bar">
+            <div id="status-bar-box" class="status-bar white-mode">
                 <div class="editable" contenteditable="true">5:22</div>
-                <div style="display:flex; align-items:center; gap:8px;">
+                <div class="sb-right">
                     <i class="fab fa-facebook-messenger"></i> <i class="fas fa-signal"></i> <i class="fas fa-wifi"></i>
-                    <span class="editable" contenteditable="true">47%</span>
+                    <span id="bat-perc" class="editable" contenteditable="true" oninput="updateBat()">47%</span>
+                    <div class="bat-shell"><div id="bat-level" class="bat-fill" style="width:47%;"></div></div>
                 </div>
             </div>
 
-            <div class="app-icons-bar">
-                <i class="fas fa-recycle" style="font-size:22px;"></i>
-                <div style="display:flex; gap:25px;"><i class="fas fa-cog"></i> <i class="fas fa-sync"></i></div>
-            </div>
-
-            <div class="nav-icons-white">
-                <i class="far fa-address-card"></i> <i class="far fa-envelope" style="color:#00ffcc;"></i> <i class="far fa-paper-plane"></i> <i class="far fa-edit"></i>
-            </div>
-
-            <div class="email-info-box">
-                <div class="editable" contenteditable="true" style="float:right; font-size:12px; color:#5f6368;">10:33 (20day)</div>
-                <div class="editable" contenteditable="true" style="font-weight:bold; font-size:16px; margin-bottom:4px;">Thank you for submitting your ID</div>
-                <div class="editable" contenteditable="true" style="font-size:13px; color:#5f6368;">To: dieit61@adadad.uk</div>
-                <div class="editable" contenteditable="true" style="font-size:13px; color:#5f6368;">From: Facebook &lt;noreply@support.facebook.com&gt;</div>
-                
-                <div class="email-controls">
-                    <div class="control-chip">↩️ Re:</div> <div class="control-chip">❌ Delete</div> <div class="control-chip">⋮ More</div>
+            <div id="imposter-temp">
+                <div class="imp-header-icons">
+                    <i class="fas fa-recycle" style="font-size:24px;"></i>
+                    <div style="display:flex; gap:25px;"><i class="fas fa-cog"></i> <i class="fas fa-sync"></i></div>
+                </div>
+                <div class="imp-info-gray">
+                    <div class="editable" contenteditable="true" style="float:right; font-size:12px; color:#5f6368;">10:33 (20day)</div>
+                    <div class="editable" contenteditable="true" style="font-weight:bold; font-size:16px; margin-bottom:4px; color:#000;">Thank you for submitting your ID</div>
+                    <div class="editable" contenteditable="true" style="color:#5f6368;">To: dieit61@adadad.uk</div>
+                    <div class="editable" contenteditable="true" style="color:#5f6368;">From: Facebook &lt;noreply@support.facebook.com&gt;</div>
+                </div>
+                <div class="imp-body">
+                    <div class="imp-title editable" contenteditable="true">Thank you for submitting your ID</div>
+                    <div style="display:flex; gap:10px; margin-bottom:20px;">
+                        <img src="https://flagcdn.com/w20/us.png" alt="US"> <i class="fas fa-globe" style="color:#666;"></i> <i class="fas fa-language" style="color:#666;"></i>
+                    </div>
+                    <div class="editable" contenteditable="true" style="font-size:16px; line-height:1.5; color:#000;">
+                        Hi,<br><br>
+                        Thanks for letting us know about the profile you reported for pretending to be someone they're not.<br><br>
+                        We removed the profile since it goes against the Facebook Community Standards. We let them know that the profile has been removed, but not that you reported it.<br><br>
+                        For more information, please read the Community Standards:<br>
+                        <span class="imp-link">https://www.facebook.com/communitystandards?ref=cr</span>
+                    </div>
+                    <br>
+                    <div class="editable" contenteditable="true" style="font-weight:bold; font-size:16px; color:#000;">Thanks,<br>The Facebook Team</div>
                 </div>
             </div>
 
-            <div id="imposter-content" class="main-content">
-                <div class="headline editable" contenteditable="true">Thank you for submitting your ID</div>
-                <div class="lang-section">
-                    <img src="https://flagcdn.com/w20/us.png" alt="US"> 
-                    <i class="fas fa-globe" style="color:#666;"></i> <i class="fas fa-language" style="color:#666;"></i>
+            <div id="copyright-temp" class="hidden">
+                <div class="cp-header">
+                    <span>←</span>
+                    <div style="display:flex; gap:22px;"><span>📥</span> <span>🗑️</span> <span>✉️</span> <span>⋮</span></div>
                 </div>
-                <div class="body-text editable" contenteditable="true">
-                    Hi,<br><br>
-                    Thanks for letting us know about the profile you reported for pretending to be someone they're not.<br><br>
-                    We removed the profile since it goes against the Facebook Community Standards. We let them know that the profile has been removed, but not that you reported it.<br><br>
-                    For more information about our policies, please read the Facebook Community Standards:<br>
-                    <span class="fb-link">https://www.facebook.com/communitystandards?ref=cr</span>
+                <div class="cp-subject editable" contenteditable="true">Copyright Report Form #2013097692821390</div>
+                <div class="cp-sender">
+                    <div class="cp-avatar">F</div>
+                    <div style="flex-grow:1;">
+                        <div class="editable" contenteditable="true"><b>Facebook</b> 4:48 PM</div>
+                        <div style="font-size:12px; color:#9aa0a6;">to me ▾</div>
+                    </div>
+                    <div style="color:#9aa0a6;">↩️ ⋮</div>
                 </div>
-                <br>
-                <div class="editable" contenteditable="true" style="font-weight:bold; font-size:16px;">
-                    Thanks,<br>The Facebook Team
-                </div>
-                <div style="margin-top:50px; border-top:1px solid #eee; padding-top:15px; color:#ddd;">
-                    <i class="far fa-comment-dots" style="font-size:24px;"></i>
-                </div>
-            </div>
-
-            <div id="copyright-content" class="main-content hidden">
-                <div class="headline editable" contenteditable="true">Copyright Report Form #2013097692821390</div>
-                <div class="body-text editable" contenteditable="true">
+                <div class="cp-content editable" contenteditable="true">
                     Thanks for contacting us. We removed the content you've reported for violating our Terms. We understand this action to resolve your intellectual property issue.<br><br>
-                    Reference: <span class="fb-link">#2013097692821390</span>
+                    If you'd like to retract your report, please fill out the retraction form:<br>
+                    <span style="color:#8ab4f8; word-break:break-all;">https://www.facebook.com/help/contact/237593160842825?original_report=2013097692821390</span><br><br>
+                    Reference: <span style="color:#8ab4f8;">#2013097692821390</span><br><br>
+                    Thanks,<br>Meta
                 </div>
             </div>
         </div>
 
-        <div class="footer-area">
-            <button class="save-btn" onclick="captureVault()">📸 SAVE TO GALLERY (FULL SCREEN)</button>
+        <div class="footer-save">
+            <button class="save-btn" onclick="takeVaultShot()">📸 SAVE TO GALLERY (FULL SCREEN)</button>
         </div>
     </div>
 
     <script>
-        function unlock() {
+        function unlockVault() {
             if(document.getElementById('pass').value === "asif2008") {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('vault-ui').style.display = 'flex';
             } else { alert("WRONG CEO PASSWORD!"); }
         }
 
-        function setView(type) {
-            document.getElementById('imposter-content').classList.toggle('hidden', type !== 'imposter');
-            document.getElementById('copyright-content').classList.toggle('hidden', type !== 'copyright');
-            document.querySelectorAll('.tab').forEach((btn, i) => btn.classList.toggle('active', (i === 0 && type === 'imposter') || (i === 1 && type === 'copyright')));
+        function switchView(type) {
+            const imp = document.getElementById('imposter-temp');
+            const cp = document.getElementById('copyright-temp');
+            const sb = document.getElementById('status-bar-box');
+            const tabImp = document.getElementById('tab-imp');
+            const tabCp = document.getElementById('tab-cp');
+
+            if (type === 'imposter') {
+                imp.classList.remove('hidden'); cp.classList.add('hidden');
+                sb.className = "status-bar white-mode";
+                tabImp.classList.add('active'); tabCp.classList.remove('active');
+            } else {
+                imp.classList.add('hidden'); cp.classList.remove('hidden');
+                sb.className = "status-bar dark-mode";
+                tabCp.classList.add('active'); tabImp.classList.remove('active');
+            }
         }
 
-        function captureVault() {
+        function updateBat() {
+            let val = parseInt(document.getElementById('bat-perc').innerText.replace('%', ''));
+            if(!isNaN(val)) document.getElementById('bat-level').style.width = val + '%';
+        }
+
+        function takeVaultShot() {
             html2canvas(document.getElementById('capture-area'), { scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'EHB-Report-Final.png';
+                link.download = 'EHB-Vault-Report-v8.png';
                 link.href = canvas.toDataURL();
                 link.click();
             });
