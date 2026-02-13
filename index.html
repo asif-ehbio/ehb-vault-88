@@ -3,137 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EHB | Mobile Fixed Vault v15.0</title>
+    <title>EHB | Final Mobile Size v16.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --accent: #00ffcc; --blue-link: #8ab4f8; }
-        /* Ensure body takes full width and height, no overflow */
         body, html { margin: 0; padding: 0; background: #000; font-family: 'Roboto', sans-serif; height: 100%; width: 100%; overflow: hidden; }
         
-        /* 🔒 Login Screen */
-        #login-box { height: 100vh; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000; z-index: 1000; position: absolute; top: 0; left: 0; }
-        input { padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; margin-bottom: 10px; text-align: center; outline: none; width: 80%; max-width: 300px; }
+        #login-box { height: 100vh; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000; z-index: 1000; position: absolute; }
+        input { padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; margin-bottom: 10px; text-align: center; width: 70%; }
 
-        /* 📱 UI Structure - Full width */
         #main-ui { display: none; height: 100%; width: 100%; flex-direction: column; }
-        .top-nav { display: flex; background: #000; padding: 10px; gap: 10px; border-bottom: 1px solid #222; flex-shrink: 0; }
-        .nav-btn { flex: 1; padding: 12px; border: none; background: #1a1a1a; color: #888; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .top-nav { display: flex; background: #000; padding: 10px; gap: 10px; flex-shrink: 0; }
+        .nav-btn { flex: 1; padding: 12px; border: none; background: #1a1a1a; color: #888; border-radius: 8px; font-weight: bold; font-size: 13px; }
         .nav-btn.active { background: var(--accent); color: #000; }
 
-        /* 📸 Capture Area - Full width, scrolls vertically */
-        #capture-area { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; background: #000; position: relative; width: 100%; }
+        /* 📸 The Capture Container - Match 51214.jpg size */
+        #capture-container { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; background: #000; width: 100%; max-width: 420px; margin: 0 auto; position: relative; }
         .editable { outline: none; }
 
-        /* 🔋 Status Bar - Full width with padding */
-        .status-bar { display: flex; justify-content: space-between; padding: 10px 20px; background: #000; color: #fff; font-size: 15px; font-weight: bold; align-items: center; flex-shrink: 0; }
-        .sb-right { display: flex; align-items: center; gap: 8px; }
-        .bat-shell { width: 25px; height: 12px; border: 1.5px solid #fff; border-radius: 4px; padding: 1px; position: relative; }
-        .bat-fill { height: 100%; background: #fff; transition: width 0.3s; }
+        /* 🔋 Precise Status Bar */
+        .status-bar { display: flex; justify-content: space-between; padding: 10px 20px; background: #000; color: #fff; font-size: 14px; font-weight: bold; flex-shrink: 0; }
+        .sb-right { display: flex; align-items: center; gap: 6px; }
 
-        /* ================= COPYRIGHT TEMPLATE (Dark) ================= */
-        #copyright-temp { display: block; color: #e8eaed; background: #000; width: 100%; }
-        .cp-head { display: flex; justify-content: space-between; padding: 15px; font-size: 20px; }
-        .cp-subject { font-size: 20px; font-weight: 500; padding: 10px 15px; word-wrap: break-word; }
-        .cp-sender-row { display: flex; align-items: center; padding: 10px 15px; margin-bottom: 15px; }
-        .cp-avatar { width: 45px; height: 45px; background: #e91e63; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; margin-right: 15px; flex-shrink: 0; }
-        /* Ensure text wraps correctly */
-        .cp-body { font-size: 15px; line-height: 1.6; color: #bdc1c6; padding: 15px; border-top: 1px solid #333; word-wrap: break-word; }
-        .link { color: var(--blue-link); text-decoration: none; word-break: break-all; display: block; margin: 5px 0; }
-        .gmail-footer { display: flex; gap: 10px; padding: 20px 15px; border-top: 1px solid #333; margin-top: 20px; }
-        .f-btn { flex: 1; border: 1px solid #5f6368; padding: 12px; text-align: center; border-radius: 25px; font-size: 14px; color: #bdc1c6; }
+        /* Gmail Header Style */
+        .gm-header { display: flex; justify-content: space-between; padding: 15px 18px; color: #fff; font-size: 18px; }
+        .header-icons { display: flex; gap: 20px; align-items: center; }
 
-        /* ================= IMPOSTER TEMPLATE (White) ================= */
-        #imposter-temp { display: none; background: #fff; color: #000; min-height: 100%; width: 100%; }
-        .imp-header { background: #000; color: #fff; padding: 12px 15px; display: flex; justify-content: space-between; }
-        .imp-gray-box { background: #f1f3f4; padding: 15px; border-bottom: 1px solid #ddd; color: #000; font-size: 14px; word-wrap: break-word; }
-        .imp-content { padding: 25px 20px; word-wrap: break-word; }
+        /* Copyright Template (Dark) */
+        #copyright-temp { display: block; color: #e8eaed; background: #000; }
+        .cp-subject { font-size: 20px; font-weight: 500; padding: 5px 18px 15px 18px; }
+        .cp-sender-area { display: flex; align-items: center; padding: 10px 18px; margin-bottom: 20px; }
+        .cp-avatar { width: 42px; height: 42px; background: #e91e63; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; margin-right: 15px; }
+        .cp-body { font-size: 14.5px; line-height: 1.5; color: #bdc1c6; padding: 15px 18px; border-top: 1px solid #222; }
+        .link { color: var(--blue-link); text-decoration: none; word-break: break-all; display: block; margin: 8px 0; }
 
-        /* Save Button Area - Full width */
-        .action-area { padding: 12px; background: #000; flex-shrink: 0; width: 100%; box-sizing: border-box; }
-        .save-btn { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 35px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; }
+        /* Imposter Template (White) */
+        #imposter-temp { display: none; background: #fff; color: #000; min-height: 100%; }
+        .imp-gray { background: #f1f3f4; padding: 15px; border-bottom: 1px solid #ddd; font-size: 13px; }
+
+        .save-area { padding: 12px; background: #000; flex-shrink: 0; }
+        .save-btn { width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: 30px; font-weight: bold; font-size: 16px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
     <div id="login-box">
-        <h2 style="color:var(--accent);">EHB CEO VAULT v15.0</h2>
-        <input type="password" id="pass" placeholder="Enter Password">
-        <button onclick="unlock()" style="padding:12px 30px; background:var(--accent); border:none; border-radius:25px; font-weight:bold; cursor:pointer;">ACCESS</button>
+        <h2 style="color:var(--accent);">CEO VAULT v16.0</h2>
+        <input type="password" id="pass" placeholder="Password">
+        <button onclick="unlock()" style="padding:10px 30px; background:var(--accent); border:none; border-radius:20px; font-weight:bold;">ACCESS</button>
     </div>
 
     <div id="main-ui">
         <div class="top-nav">
-            <button id="ti" class="nav-btn" onclick="st('imposter')">Imposter (Full)</button>
-            <button id="tc" class="nav-btn active" onclick="st('copyright')">Copyright (Full)</button>
+            <button id="btn-imp" class="nav-btn" onclick="st('imposter')">Imposter (Full)</button>
+            <button id="btn-cp" class="nav-btn active" onclick="st('copyright')">Copyright (Full)</button>
         </div>
 
-        <div id="capture-area">
+        <div id="capture-container">
             <div class="status-bar">
                 <div class="editable" contenteditable="true">5:22 PM</div>
                 <div class="sb-right">
                     <i class="fab fa-facebook-messenger"></i> <i class="fas fa-signal"></i> <i class="fas fa-wifi"></i>
-                    <span id="perc" class="editable" contenteditable="true" oninput="upd()">47%</span>
-                    <div class="bat-shell"><div id="fill" class="bat-fill" style="width:47%;"></div></div>
+                    <span contenteditable="true" oninput="upd()">47%</span>
+                    <div style="width:22px; height:10px; border:1px solid #fff; border-radius:2px; padding:1px;"><div id="fill" style="height:100%; background:#fff; width:47%;"></div></div>
                 </div>
             </div>
 
-            <div id="imposter-temp">
-                <div class="imp-header">
-                    <i class="fas fa-recycle" style="font-size:24px;"></i>
-                    <div style="display:flex; gap:25px;"><i class="fas fa-cog"></i> <i class="fas fa-sync"></i></div>
-                </div>
-                <div class="imp-gray-box">
-                    <div class="editable" contenteditable="true" style="float:right;">10:33 (20day)</div>
-                    <div class="editable" contenteditable="true" style="font-weight:bold; font-size:16px; margin-bottom:4px;">Thank you for submitting your ID</div>
-                    <div class="editable" contenteditable="true">To: dieit61@adadad.uk</div>
-                    <div class="editable" contenteditable="true">From: Facebook &lt;noreply@support.facebook.com&gt;</div>
-                </div>
-                <div class="imp-content">
-                    <h2 class="editable" contenteditable="true">Thank you for submitting your ID</h2>
-                    <div style="display:flex; gap:10px; margin-bottom:20px;">
-                        <img src="https://flagcdn.com/w20/us.png" alt="US"> <i class="fas fa-globe" style="color:#666;"></i> <i class="fas fa-language" style="color:#666;"></i>
-                    </div>
-                    <p class="editable" contenteditable="true" style="font-size:16px; line-height:1.5;">Hi,<br><br>Thanks for letting us know about the profile you reported for pretending to be someone they're not.<br><br>We removed the profile since it goes against the Facebook Community Standards. We let them know that the profile has been removed, but not that you reported it.</p>
+            <div class="gm-header">
+                <span>←</span>
+                <div class="header-icons">
+                    <i class="fas fa-archive" style="color:#ff8a65;"></i>
+                    <i class="fas fa-trash"></i>
+                    <i class="fas fa-envelope"></i>
+                    <i class="fas fa-ellipsis-v"></i>
                 </div>
             </div>
 
             <div id="copyright-temp">
-                <div class="cp-head">
-                    <span>←</span>
-                    <div style="display:flex; gap:22px;"><span>📥</span> <span>🗑️</span> <span>✉️</span> <span>⋮</span></div>
-                </div>
                 <div class="cp-subject editable" contenteditable="true">Copyright Report Form #2013097692821390</div>
-                <div class="cp-sender-row">
+                <div class="cp-sender-area">
                     <div class="cp-avatar">F</div>
-                    <div style="flex-grow:1; overflow: hidden;">
-                        <div class="editable" contenteditable="true" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>Facebook</b> 4:48 PM</div>
+                    <div style="flex-grow:1;">
+                        <div class="editable" contenteditable="true"><b>Facebook</b> 4:48 PM</div>
                         <div style="font-size:12px; color:#9aa0a6;">to me ▾</div>
                     </div>
-                    <div style="color:#9aa0a6;">↩️ ⋮</div>
+                    <div style="color:#9aa0a6;"><i class="fas fa-reply"></i> <i class="fas fa-ellipsis-v" style="margin-left:15px;"></i></div>
                 </div>
                 <div class="cp-body editable" contenteditable="true">
                     Thanks for contacting us. We removed the content you've reported for violating our Terms. We understand this action to resolve your intellectual property issue.<br><br>
-                    If you'd like to retract your report, please fill out the appropriate retraction form:<br>
-                    <span class="link">https://www.facebook.com/help/contact/237593160842825?original_report=2013097692821390</span>
-                    <span class="link">https://help.instagram.com/contact/3373960976225657?original_report=2013097692821390</span><br>
-                    For more information about retractions, please visit our Help Centers:<br>
-                    <span class="link">https://www.facebook.com/help/1206218382801108?ref=cr</span>
-                    <span class="link">https://help.instagram.com/275268756304020?ref=cr</span><br>
-                    If you'd like to report something else, please submit a new report:<br>
-                    <span class="link">https://www.facebook.com/help/contact/...</span><br>
+                    If you'd like to retract your report, please fill out the retraction form:<br>
+                    <span class="link">https://www.facebook.com/help/contact/237593160842825?original_report=2013097692821390</span><br>
                     Reference: <span class="link" style="display:inline;">#2013097692821390</span>.<br><br>
                     Thanks,<br>Meta
                 </div>
-                <div class="gmail-footer">
-                    <div class="f-btn">↩️ Reply</div>
-                    <div class="f-btn">↪️ Forward</div>
+                <div style="display:flex; gap:10px; padding:20px 18px; border-top:1px solid #222;">
+                    <div style="flex:1; border:1px solid #5f6368; padding:10px; text-align:center; border-radius:25px; font-size:13px;">↩️ Reply</div>
+                    <div style="flex:1; border:1px solid #5f6368; padding:10px; text-align:center; border-radius:25px; font-size:13px;">↪️ Forward</div>
+                </div>
+            </div>
+
+            <div id="imposter-temp">
+                <div class="imp-gray">
+                    <div class="editable" contenteditable="true" style="float:right;">10:33 (20day)</div>
+                    <div class="editable" contenteditable="true" style="font-weight:bold; font-size:15px; margin-bottom:4px;">Thank you for submitting your ID</div>
+                    <div class="editable" contenteditable="true">To: dieit61@adadad.uk</div>
+                </div>
+                <div style="padding:25px 18px;">
+                    <h2 class="editable" contenteditable="true">Thank you for submitting your ID</h2>
+                    <p class="editable" contenteditable="true" style="line-height:1.6; font-size:15px;">Hi,<br><br>Thanks for letting us know about the profile you reported...</p>
                 </div>
             </div>
         </div>
 
-        <div class="action-area">
-            <button class="save-btn" onclick="save()">📸 SAVE FULL SCREENSHOT (MOBILE FIX)</button>
+        <div class="save-area">
+            <button class="save-btn" onclick="save()">📸 SAVE AS MOBILE IMAGE</button>
         </div>
     </div>
 
@@ -142,40 +126,37 @@
             if(document.getElementById('pass').value === "asif2008") {
                 document.getElementById('login-box').style.display = 'none';
                 document.getElementById('main-ui').style.display = 'flex';
-            } else { alert("WRONG CEO PASSWORD!"); }
+            } else { alert("WRONG PASSWORD!"); }
         }
         function st(type) {
             const imp = document.getElementById('imposter-temp'), cp = document.getElementById('copyright-temp');
-            const btnI = document.getElementById('ti'), btnC = document.getElementById('tc');
-            const area = document.getElementById('capture-area');
             if (type === 'imposter') {
                 imp.style.display = 'block'; cp.style.display = 'none';
-                area.style.background = '#fff'; btnI.classList.add('active'); btnC.classList.remove('active');
+                document.getElementById('btn-imp').classList.add('active');
+                document.getElementById('btn-cp').classList.remove('active');
             } else {
                 imp.style.display = 'none'; cp.style.display = 'block';
-                area.style.background = '#000'; btnC.classList.add('active'); btnI.classList.remove('active');
+                document.getElementById('btn-cp').classList.add('active');
+                document.getElementById('btn-imp').classList.remove('active');
             }
         }
-        function upd() {
-            let v = parseInt(document.getElementById('perc').innerText.replace('%',''));
-            if(!isNaN(v)) document.getElementById('fill').style.width = v + '%';
-        }
-
         function save() {
-            const captureElement = document.getElementById('capture-area');
-            const originalOverflow = captureElement.style.overflow;
-            captureElement.style.overflow = 'visible';
+            const el = document.getElementById('capture-container');
+            const originalOverflow = el.style.overflow;
+            el.style.overflow = 'visible';
             
-            html2canvas(captureElement, { 
-                scale: 2, 
-                useCORS: true, 
-                scrollY: -window.scrollY,
-                windowHeight: captureElement.scrollHeight
+            html2canvas(el, { 
+                scale: 3, 
+                width: el.clientWidth, 
+                height: el.scrollHeight,
+                windowWidth: el.clientWidth,
+                windowHeight: el.scrollHeight,
+                useCORS: true
             }).then(canvas => {
-                captureElement.style.overflow = originalOverflow;
+                el.style.overflow = originalOverflow;
                 const link = document.createElement('a');
-                link.download = 'EHB-Mobile-Fixed-v15.png';
-                link.href = canvas.toDataURL('image/png');
+                link.download = 'EHB-Mobile-Size-v16.png';
+                link.href = canvas.toDataURL();
                 link.click();
             });
         }
