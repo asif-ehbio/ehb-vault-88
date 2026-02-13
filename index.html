@@ -3,162 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EHB | Fullscreen Vault</title>
+    <title>EHB | Vault v6.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #000; --text: #e8eaed; --meta: #9aa0a6; --accent: #00ffcc; --fb-pink: #d81b60; }
-        html, body { height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden; background-color: var(--bg); color: var(--text); font-family: 'Roboto', sans-serif; }
+        :root { --bg: #000; --white: #ffffff; --grey: #9aa0a6; --blue: #1a73e8; --accent: #00ffcc; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: var(--white); font-family: 'Roboto', sans-serif; height: 100%; overflow: hidden; }
         
-        /* --- Login Screen (Centered) --- */
-        #login-box { height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        /* Login Screen */
+        #login-screen { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000; z-index: 100; position: relative; }
         
-        /* --- MAIN APP CONTAINER (Fullscreen Layout) --- */
-        #report-tool { display: none; height: 100%; width: 100%; flex-direction: column; }
+        /* Master Container */
+        #vault-ui { display: none; height: 100%; flex-direction: column; }
         
-        /* Controls (Tabs) - Hidden in final screenshot */
-        .template-controls { display: flex; gap: 10px; padding: 10px; background: #111; flex-shrink: 0; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: #222; color: #fff; border-radius: 5px; font-weight: bold; }
-        .tab-btn.active { background: var(--accent); color: #000; }
-        
-        /* The area to be captured (Status Bar + Email) */
-        #final-capture-zone { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; background: #000; position: relative; }
+        /* Tabs (Not in screenshot) */
+        .nav-tabs { display: flex; background: #111; padding: 10px; gap: 10px; flex-shrink: 0; }
+        .tab { flex: 1; padding: 10px; border: none; background: #222; color: #fff; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .tab.active { background: var(--accent); color: #000; }
 
-        /* --- DYNAMIC STATUS BAR (Fixed Top) --- */
-        .status-bar { display: flex; justify-content: space-between; padding: 8px 15px; background: #000; font-size: 14px; font-weight: 500; align-items: center; flex-shrink: 0; z-index: 10; }
+        /* Status Bar (Editable) */
+        .status-bar { display: flex; justify-content: space-between; padding: 8px 15px; font-size: 14px; background: #000; align-items: center; }
         .sb-right { display: flex; align-items: center; gap: 8px; }
-        .battery-shell { width: 24px; height: 12px; border: 2px solid #fff; border-radius: 3px; padding: 1px; position: relative; }
-        .battery-fill { height: 100%; background: #fff; width: 85%; transition: width 0.3s; }
-        .battery-shell::after { content: ''; position: absolute; right: -4px; top: 3px; width: 2px; height: 6px; background: #fff; border-radius: 0 2px 2px 0; }
-        #bat-perc { outline: none; }
-
-        /* Scrollable Email Body Area */
-        .scrollable-content { flex-grow: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-
-        /* --- GMAIL Styles --- */
-        .gm-header { display: flex; justify-content: space-between; padding: 10px 15px; font-size: 20px; }
-        .gm-subject { font-size: 20px; font-weight: 500; padding: 10px 15px; outline: none; }
-        .gm-sender { display: flex; align-items: center; padding: 5px 15px; margin-bottom: 15px; }
-        .gm-avatar { width: 45px; height: 45px; background-color: var(--fb-pink); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 22px; margin-right: 15px; flex-shrink: 0; }
-        .gm-meta { font-size: 14px; color: var(--meta); flex-grow: 1; line-height: 1.4; }
-        .gm-meta b { color: #fff; }
-        .gm-content { font-size: 15px; line-height: 1.6; color: #bdc1c6; padding: 15px; border-top: 1px solid #333; outline: none; }
-        .blue-link { color: #8ab4f8; text-decoration: none; word-wrap: break-word; }
-        .gm-footer { display: flex; gap: 10px; padding: 20px 15px; margin-bottom: 20px; }
-        .btn-outline { flex: 1; border: 1px solid #5f6368; padding: 12px; text-align: center; border-radius: 25px; font-size: 14px; color: #bdc1c6; }
+        .bat-shell { width: 22px; height: 11px; border: 1.5px solid #fff; border-radius: 2px; padding: 1px; position: relative; }
+        .bat-fill { height: 100%; background: #fff; width: 47%; }
         
-        /* --- Bottom Save Button Area --- */
-        .save-area { padding: 15px; background: #000; flex-shrink: 0; }
-        .save-btn { background: var(--accent); color: #000; font-weight: bold; padding: 15px; border-radius: 35px; width: 100%; border: none; font-size: 16px; }
+        /* Capture Zone */
+        #capture-area { background: #fff; color: #000; flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; }
         
-        /* Misc */
-        input { padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; margin-bottom: 10px; text-align: center; }
+        /* New Imposter Template (Based on 51189.png) */
+        .mail-header { background: #000; color: #fff; padding: 15px; border-bottom: 1px solid #333; }
+        .mail-info { padding: 15px; background: #f8f9fa; border-bottom: 1px solid #ddd; font-size: 14px; color: #444; }
+        .mail-info b { color: #000; }
+        .editable { outline: none; }
+
+        .mail-body { padding: 20px; flex-grow: 1; background: #fff; }
+        .mail-title { font-size: 24px; font-weight: 900; margin-bottom: 15px; color: #000; }
+        .lang-icons { margin-bottom: 20px; display: flex; gap: 10px; align-items: center; }
+        .content-text { font-size: 16px; line-height: 1.5; color: #000; margin-bottom: 20px; }
+        .link { color: var(--blue); text-decoration: underline; word-break: break-all; font-size: 14px; }
+
+        /* Save Button Area */
+        .footer { padding: 15px; background: #000; flex-shrink: 0; }
+        .save-btn { width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="login-box">
-        <h2 style="color:var(--accent);">CEO VAULT v5.0 (Fullscreen)</h2>
-        <input type="password" id="pass" placeholder="Enter Password">
-        <button onclick="unlock()" style="background:var(--accent); border:none; padding:10px 30px; border-radius:25px; font-weight:bold; margin-top:10px;">ACCESS</button>
+    <div id="login-screen">
+        <h2 style="color:var(--accent);">CEO VAULT v6.0</h2>
+        <input type="password" id="pass" placeholder="Enter Password" style="padding:12px; border-radius:5px; border:none; margin-bottom:10px;">
+        <button onclick="unlock()" style="padding:10px 25px; background:var(--accent); border:none; border-radius:20px; font-weight:bold;">UNLOCK HUB</button>
     </div>
 
-    <div id="report-tool">
-        <div class="template-controls">
-            <button class="tab-btn active" onclick="switchTab('imposter')">Imposter Report</button>
-            <button class="tab-btn" onclick="switchTab('copyright')">Copyright Tech</button>
+    <div id="vault-ui">
+        <div class="nav-tabs">
+            <button class="tab active" onclick="showTab('imposter')">Imposter (New)</button>
+            <button class="tab" onclick="showTab('copyright')">Copyright Hub</button>
         </div>
 
-        <div id="final-capture-zone">
-            <div class="status-bar">
-                <div contenteditable="true">8:02 PM</div>
+        <div id="capture-area">
+            <div class="status-bar" style="background: #000; color:#fff;">
+                <div class="editable" contenteditable="true">5:22 PM</div>
                 <div class="sb-right">
-                    <i class="fas fa-wifi"></i>
-                    <i class="fas fa-signal"></i>
-                    <span id="bat-perc" contenteditable="true" oninput="updateBattery()">85%</span>
-                    <div class="battery-shell"><div class="battery-fill" id="bat-fill"></div></div>
+                    <i class="fas fa-signal"></i> <i class="fas fa-wifi"></i>
+                    <span id="perc-text" class="editable" contenteditable="true" oninput="updateBat()">47%</span>
+                    <div class="bat-shell"><div id="bat-fill" class="bat-fill"></div></div>
                 </div>
             </div>
 
-            <div class="scrollable-content">
-                <div class="gm-header">
-                    <span>←</span>
-                    <div><span>📥</span> <span style="margin-left:20px;">🗑️</span> <span style="margin-left:20px;">✉️</span> <span style="margin-left:20px;">⋮</span></div>
+            <div class="mail-header">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <i class="fas fa-recycle" style="font-size:24px;"></i>
+                    <div><i class="fas fa-cog"></i> <i class="fas fa-sync" style="margin-left:20px;"></i></div>
                 </div>
+            </div>
 
-                <div id="imposter-template">
-                    <div class="gm-subject" contenteditable="true">Imposter Report Form #541525145296952</div>
-                    <div class="gm-sender">
-                        <div class="gm-avatar">F</div>
-                        <div class="gm-meta"><b>Facebook</b> <span contenteditable="true">8:02 PM</span><br>to me ▾</div>
-                    </div>
-                    <div class="gm-content" contenteditable="true">
-                        Hi Asif,<br><br>
-                        Thanks for contacting us. We've reviewed the profile you reported and found that it violates our Community Standards on account integrity and authentic identity.<br><br>
-                        We've removed the profile which we understand to resolve this report.<br><br>
-                        Thanks,<br>Meta
-                    </div>
-                </div>
+            <div class="mail-info">
+                <div class="editable" contenteditable="true" style="float:right;">10:33 (20day)</div>
+                <div class="editable" contenteditable="true" style="font-weight:bold; font-size:16px; margin-bottom:5px;">Thank you for submitting your ID</div>
+                <div class="editable" contenteditable="true">To: dieit61@adadad.uk</div>
+                <div class="editable" contenteditable="true">From: Facebook &lt;noreply@support.facebook.com&gt;</div>
+            </div>
 
-                <div id="copyright-template" class="hidden">
-                    <div class="gm-subject" contenteditable="true">Copyright Report Form #2013097692821390</div>
-                    <div class="gm-sender">
-                        <div class="gm-avatar">F</div>
-                        <div class="gm-meta"><b>Facebook</b> <span contenteditable="true">Yesterday</span><br>to me ▾</div>
-                    </div>
-                    <div class="gm-content" contenteditable="true">
-                        Thanks for contacting us. We removed the content you've reported for violating our Terms.<br><br>
-                        If you'd like to report something else, please submit a new report:<br>
-                        <span class="blue-link">https://www.facebook.com/help/contact/...</span><br><br>
-                        Thanks,<br>Meta
-                    </div>
+            <div id="imposter-temp" class="mail-body">
+                <div class="mail-title editable" contenteditable="true">Thank you for submitting your ID</div>
+                <div class="lang-icons">
+                    <img src="https://flagcdn.com/w20/us.png" alt="US">
+                    <span style="color:#666;">🌐 </> 🌐</span>
                 </div>
+                <div class="content-text editable" contenteditable="true">
+                    Hi,<br><br>
+                    Thanks for letting us know about the profile you reported for pretending to be someone they're not.<br><br>
+                    We removed the profile since it goes against the Facebook Community Standards. We let them know that the profile has been removed, but not that you reported it.<br><br>
+                    For more information about our policies, please read the Facebook Community Standards:<br>
+                    <span class="link">https://www.facebook.com/communitystandards?ref=cr</span>
+                </div>
+                <div style="font-weight:bold;" class="editable" contenteditable="true">
+                    Thanks,<br>The Facebook Team
+                </div>
+            </div>
 
-                <div class="gm-footer">
-                    <div class="btn-outline">↩️ Reply</div>
-                    <div class="btn-outline">↪️ Forward</div>
+            <div id="copyright-temp" class="mail-body hidden">
+                <div class="mail-title editable" contenteditable="true">Copyright Report Form #2013097692821390</div>
+                <div class="content-text editable" contenteditable="true">
+                    Thanks for contacting us. We removed the content you've reported for violating our Terms. We understand this action to resolve your intellectual property issue.<br><br>
+                    Reference: <span class="link">#2013097692821390</span>
                 </div>
-            </div> </div> <div class="save-area">
-             <button class="save-btn" onclick="takeShot()">📸 SAVE FULL SCREENSHOT</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="save-btn" onclick="saveShot()">📸 SAVE TO GALLERY (FULL SCREEN)</button>
         </div>
     </div>
 
     <script>
         function unlock() {
             if(document.getElementById('pass').value === "asif2008") {
-                document.getElementById('login-box').style.display = 'none';
-                // Use flex to activate the fullscreen layout
-                document.getElementById('report-tool').style.display = 'flex'; 
-            } else { alert("ACCESS DENIED!"); }
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('vault-ui').style.display = 'flex';
+            } else { alert("Access Denied!"); }
         }
 
-        function switchTab(tabName) {
-            const copyTemp = document.getElementById('copyright-template');
-            const impTemp = document.getElementById('imposter-template');
-            const btns = document.querySelectorAll('.tab-btn');
-            if (tabName === 'copyright') {
-                copyTemp.classList.remove('hidden'); impTemp.classList.add('hidden');
-                btns[1].classList.add('active'); btns[0].classList.remove('active');
-            } else {
-                copyTemp.classList.add('hidden'); impTemp.classList.remove('hidden');
-                btns[0].classList.add('active'); btns[1].classList.remove('active');
-            }
+        function showTab(type) {
+            document.getElementById('imposter-temp').classList.toggle('hidden', type !== 'imposter');
+            document.getElementById('copyright-temp').classList.toggle('hidden', type !== 'copyright');
+            document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', (i === 0 && type === 'imposter') || (i === 1 && type === 'copyright')));
         }
 
-        function updateBattery() {
-            const percText = document.getElementById('bat-perc').innerText;
-            const numericPerc = parseInt(percText.replace(/[^0-9]/g, '')); 
-            if (!isNaN(numericPerc) && numericPerc >= 0 && numericPerc <= 100) {
-                document.getElementById('bat-fill').style.width = numericPerc + "%";
-            }
+        function updateBat() {
+            let val = parseInt(document.getElementById('perc-text').innerText.replace('%', ''));
+            if(!isNaN(val)) document.getElementById('bat-fill').style.width = val + '%';
         }
 
-        function takeShot() {
-            // Capture only the final-capture-zone (Status bar + Email body)
-            html2canvas(document.getElementById('final-capture-zone'), { backgroundColor: '#000', scale: 2, useCORS: true }).then(canvas => {
+        function saveShot() {
+            html2canvas(document.getElementById('capture-area'), { scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'EHB-Fullscreen-Report.png';
+                link.download = 'EHB-Vault-v6.png';
                 link.href = canvas.toDataURL();
                 link.click();
             });
