@@ -3,71 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EHB | Secure Vault</title>
+    <title>EHB | Full Gmail Hub</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Roboto', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
-        #login-screen { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        #tool-screen { display: none; width: 100%; max-width: 400px; background-color: #000; }
-        .gmail-header { display: flex; justify-content: space-between; padding: 15px; color: #e8eaed; }
-        .subject { font-size: 20px; font-weight: 500; margin: 15px; color: #e8eaed; outline: none; }
-        .sender { display: flex; align-items: center; padding: 0 15px; margin-bottom: 20px; }
-        .avatar { width: 40px; height: 40px; background-color: #f1c40f; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; margin-right: 12px; }
-        .meta { font-size: 13px; color: #9aa0a6; flex-grow: 1; }
-        .content { font-size: 14.5px; line-height: 1.5; color: #bdc1c6; padding: 15px; border-top: 1px solid #333; outline: none; }
-        .footer-btns { display: flex; gap: 10px; padding: 20px 15px; }
-        .f-btn { flex: 1; border: 1px solid #5f6368; padding: 10px; text-align: center; border-radius: 20px; font-size: 14px; color: #bdc1c6; }
+        body { background-color: #000; color: #fff; font-family: 'Roboto', sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
+        #login-box { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #report-tool { display: none; width: 100%; max-width: 420px; background-color: #000; padding-bottom: 30px; }
+        .gm-header { display: flex; justify-content: space-between; padding: 15px 15px; font-size: 20px; color: #e8eaed; }
+        .gm-subject { font-size: 22px; font-weight: 500; padding: 10px 15px; color: #e8eaed; outline: none; }
+        .gm-sender { display: flex; align-items: center; padding: 10px 15px; margin-bottom: 15px; }
+        .gm-avatar { width: 45px; height: 45px; background-color: #d81b60; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 22px; margin-right: 15px; }
+        .gm-meta { font-size: 14px; color: #9aa0a6; flex-grow: 1; line-height: 1.4; }
+        .gm-meta b { color: #fff; }
+        
+        .gm-content { font-size: 15px; line-height: 1.6; color: #bdc1c6; padding: 20px 15px; border-top: 1px solid #333; outline: none; }
+        .blue-link { color: #8ab4f8; text-decoration: none; word-wrap: break-word; font-size: 13.5px; display: block; margin: 5px 0 15px 0; }
+        
+        .gm-footer { display: flex; gap: 10px; padding: 20px 15px; }
+        .btn-outline { flex: 1; border: 1px solid #5f6368; padding: 12px; text-align: center; border-radius: 25px; font-size: 14px; color: #bdc1c6; }
+        .save-btn { background: #00ffcc; color: #000; font-weight: bold; padding: 18px; border-radius: 35px; width: 90%; margin: 20px auto; border: none; cursor: pointer; text-transform: uppercase; }
         input { padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; margin-bottom: 10px; text-align: center; }
-        .save-btn { background: #00ffcc; color: #000; font-weight: bold; padding: 15px; border-radius: 30px; width: 90%; margin: 20px auto; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <h2 style="color:#00ffcc;">EHB SECURE ACCESS</h2>
+    <div id="login-box">
+        <h2 style="color:#00ffcc;">CEO ACCESS HUB</h2>
         <input type="password" id="pass" placeholder="Enter CEO Password">
-        <button onclick="unlock()" style="background:#00ffcc; border:none; padding:10px 25px; border-radius:20px; font-weight:bold;">ACCESS</button>
+        <button onclick="unlock()" style="background:#00ffcc; border:none; padding:12px 30px; border-radius:25px; font-weight:bold;">ACCESS</button>
     </div>
 
-    <div id="tool-screen">
-        <div id="capture-area" style="background:#000;">
-            <div class="gmail-header">
+    <div id="report-tool">
+        <div id="capture-zone" style="background:#000; padding-bottom: 20px;">
+            <div class="gm-header">
                 <span>←</span>
-                <div><span>🗑️</span> <span style="margin-left:20px;">✉️</span> <span style="margin-left:20px;">⋮</span></div>
+                <div><span>📥</span> <span style="margin-left:22px;">🗑️</span> <span style="margin-left:22px;">✉️</span> <span style="margin-left:22px;">⋮</span></div>
             </div>
-            <div class="subject" contenteditable="true">Copyright Report Form #2002879223624039</div>
-            <div class="sender">
-                <div class="avatar">F</div>
-                <div class="meta">
-                    <b style="color:#fff;">Facebook</b> <span contenteditable="true">Yesterday</span><br>
+
+            <div class="gm-subject" contenteditable="true">Copyright Report Form #2013097692821390</div>
+
+            <div class="gm-sender">
+                <div class="gm-avatar">F</div>
+                <div class="gm-meta">
+                    <b>Facebook</b> <span contenteditable="true">4:48 PM</span><br>
                     to me ▾
                 </div>
                 <div style="color:#9aa0a6;">↩️ ⋮</div>
             </div>
-            <div class="content" contenteditable="true">
-                Thanks for contacting us.<br><br>
-                Our technology reviewed your report and found that your content has already been removed, which we understand to resolve this report. Reference: <span style="color:#8ab4f8;">#2002879223624039</span>.<br><br>
-                Thanks,<br>Meta
+
+            <div class="gm-content" contenteditable="true">
+                Thanks for contacting us. We removed the content you've reported for violating our Terms. We understand this action to resolve your intellectual property issue.<br><br>
+                If you'd like to retract your report, please fill out the appropriate retraction form:<br>
+                <span class="blue-link">https://www.facebook.com/help/contact/237593160842825?original_report=2013097692821390</span>
+                <span class="blue-link">https://help.instagram.com/contact/3373960976225657?original_report=2013097692821390</span><br>
+                For more information about retractions, please visit our Help Centers:<br>
+                <span class="blue-link">https://www.facebook.com/help/1206218382801108?ref=cr</span>
+                <span class="blue-link">https://help.instagram.com/275268756304020?ref=cr</span><br>
+                If you'd like to report something else, or if you don't believe this action resolved your issue, please submit a new report:<br>
+                <span class="blue-link">https://www.facebook.com/help/...</span>
+                <br>Thanks,<br>Meta
             </div>
-            <div class="footer-btns">
-                <div class="f-btn">↩️ Reply</div>
-                <div class="f-btn">↪️ Forward</div>
+
+            <div class="gm-footer">
+                <div class="btn-outline">↩️ Reply</div>
+                <div class="btn-outline">↪️ Forward</div>
             </div>
         </div>
-        <button class="save-btn" onclick="save()">📸 SAVE TO GALLERY</button>
+        <button class="save-btn" onclick="takeShot()">📸 SAVE FULL SCREENSHOT</button>
     </div>
 
     <script>
         function unlock() {
             if(document.getElementById('pass').value === "asif2008") {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('tool-screen').style.display = 'block';
-            } else { alert("Wrong Password!"); }
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('report-tool').style.display = 'block';
+            } else { alert("ACCESS DENIED!"); }
         }
-        function save() {
-            html2canvas(document.getElementById('capture-area'), { backgroundColor: '#000', scale: 2 }).then(canvas => {
+        function takeShot() {
+            html2canvas(document.getElementById('capture-zone'), { backgroundColor: '#000', scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'EHB-Report-' + Date.now() + '.png';
+                link.download = 'EHB-Full-Report.png';
                 link.href = canvas.toDataURL();
                 link.click();
             });
