@@ -3,65 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EHB | Dual Vault v10.5</title>
+    <title>EHB | Master Vault v11.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #00ffcc; --blue: #1a73e8; --profile-brown: #795548; }
+        :root { --accent: #00ffcc; --blue: #1a73e8; --profile-brown: #795548; --search-bg: #f0f4f9; }
         body, html { margin: 0; padding: 0; background: #000; font-family: 'Roboto', sans-serif; height: 100%; overflow: hidden; }
         
         #login-screen { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000; z-index: 1000; position: relative; }
-        input { padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; margin-bottom: 10px; text-align: center; outline: none; }
+        input { padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; margin-bottom: 10px; text-align: center; }
 
         #vault-ui { display: none; height: 100%; flex-direction: column; }
-        .nav-tabs { display: flex; background: #000; padding: 8px; gap: 8px; flex-shrink: 0; border-bottom: 1px solid #222; }
+        .nav-tabs { display: flex; background: #000; padding: 8px; gap: 8px; border-bottom: 1px solid #222; }
         .tab { flex: 1; padding: 10px; border: none; background: #1a1a1a; color: #888; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .tab.active { background: var(--accent); color: #000; }
 
         #capture-area { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; background: #fff; }
         .editable { outline: none; }
 
-        /* 🔋 Dynamic iPhone Status Bar */
-        .status-bar { display: flex; justify-content: space-between; padding: 10px 25px; background: #fff; color: #000; font-size: 16px; font-weight: 900; align-items: center; }
-        .sb-right { display: flex; align-items: center; gap: 5px; }
+        /* 🔋 Exact iPhone Status Bar */
+        .status-bar { display: flex; justify-content: space-between; padding: 10px 30px 5px 35px; background: #fff; color: #000; font-size: 16.5px; font-weight: 900; align-items: center; }
+        .sb-right { display: flex; align-items: center; gap: 6px; }
         
-        .bat-shell { width: 26px; height: 13px; border: 1.5px solid #000; border-radius: 4px; padding: 1px; position: relative; display: flex; align-items: center; }
-        .bat-fill { height: 100%; background: #4caf50; width: 55%; border-radius: 1px; position: relative; }
-        .bat-fill::after { content: '⚡'; position: absolute; font-size: 8px; right: -8px; top: 0; color: #000; }
+        /* Battery Bolt Style */
+        .bat-shell { width: 27px; height: 14px; border: 1.5px solid #000; border-radius: 4px; padding: 1px; position: relative; display: flex; align-items: center; margin-left: 2px; }
+        .bat-fill { height: 100%; background: #4caf50; width: 55%; border-radius: 1px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .bat-fill::after { content: '⚡'; position: absolute; font-size: 8px; color: #000; left: 100%; margin-left: 2px; }
         .bat-shell::after { content: ''; position: absolute; right: -4px; top: 3.5px; width: 2px; height: 4px; background: #000; border-radius: 0 2px 2px 0; }
 
         /* ================= INBOX VIEW (Goal: 51199.jpg) ================= */
-        #copyright-view { background: #fff; height: 100%; }
-        .search-bar { margin: 10px 15px; padding: 12px 20px; background: #eaf1fb; border-radius: 35px; display: flex; justify-content: space-between; align-items: center; color: #444; }
-        .profile-icon { width: 32px; height: 32px; background: var(--profile-brown); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+        .search-container { margin: 12px 18px; padding: 14px 22px; background: var(--search-bg); border-radius: 40px; display: flex; justify-content: space-between; align-items: center; color: #444; font-size: 17px; }
+        .profile-bubble { width: 33px; height: 33px; background: var(--profile-brown); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 14px; }
         
-        .label-all { padding: 5px 20px; font-size: 12px; font-weight: bold; color: #5f6368; margin-top: 10px; }
-        .mail-row { padding: 12px 20px; display: flex; align-items: flex-start; gap: 18px; border-bottom: 1px solid #f8f9fa; }
+        .label-text { padding: 10px 22px; font-size: 13.5px; font-weight: bold; color: #5f6368; }
+        .mail-item { padding: 14px 22px; display: flex; align-items: flex-start; gap: 20px; border-bottom: 1px solid #f2f2f2; }
         
-        /* Gradient Instagram Icon */
-        .ig-icon { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; flex-shrink: 0; }
+        /* Perfect Instagram Gradient Icon */
+        .insta-logo { width: 44px; height: 44px; border-radius: 14px; background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; flex-shrink: 0; }
         
-        .mail-text { flex-grow: 1; overflow: hidden; }
-        .mail-top { display: flex; justify-content: space-between; margin-bottom: 2px; }
-        .mail-top b { font-size: 17px; color: #202124; }
-        .mail-top span { font-size: 13px; color: #202124; font-weight: bold; }
-        .mail-subject { font-weight: bold; font-size: 14px; color: #202124; margin-bottom: 2px; }
-        .mail-preview { font-size: 13.5px; color: #5f6368; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; }
-
-        /* ================= EMAIL VIEW (Based on 51189.png) ================= */
-        #imposter-view { display: none; background: #fff; }
-        .black-header { background: #000; color: #fff; padding: 12px 15px; display: flex; justify-content: space-between; }
-        .gray-info { background: #f1f3f4; padding: 12px 15px; font-size: 13px; color: #000; border-bottom: 1px solid #ddd; }
+        .text-area { flex-grow: 1; overflow: hidden; padding-top: 2px; }
+        .row-one { display: flex; justify-content: space-between; margin-bottom: 3px; }
+        .row-one b { font-size: 17.5px; color: #202124; }
+        .row-one span { font-size: 14px; color: #202124; font-weight: bold; }
+        .row-two { font-weight: bold; font-size: 14.5px; color: #202124; margin-bottom: 3px; }
+        .row-three { font-size: 14px; color: #5f6368; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
 
         .footer-nav { padding: 12px; background: #000; flex-shrink: 0; }
         .save-btn { width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <h2 style="color:var(--accent);">EHB VAULT v10.5</h2>
-        <input type="password" id="p" placeholder="CEO Password">
+        <h2 style="color:var(--accent);">EHB CEO VAULT v11.0</h2>
+        <input type="password" id="p" placeholder="Enter Password">
         <button onclick="u()" style="padding:10px 30px; background:var(--accent); border:none; border-radius:20px; font-weight:bold;">ACCESS</button>
     </div>
 
@@ -75,54 +71,58 @@
             <div class="status-bar">
                 <div class="editable" contenteditable="true">2:51</div>
                 <div class="sb-right">
-                    <i class="fas fa-signal"></i> <i class="fas fa-wifi"></i>
-                    <span id="bt" class="editable" contenteditable="true" oninput="ub()">55%</span>
-                    <div class="bat-shell"><div id="bf" class="bat-fill" style="width:55%;"></div></div>
+                    <div style="font-size: 18px; display: flex; gap: 4px;">
+                        <i class="fas fa-signal"></i>
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <div class="sb-right">
+                        <span id="bt" class="editable" contenteditable="true" oninput="ub()">55</span>
+                        <div class="bat-shell"><div id="bf" class="bat-fill" style="width:55%;"></div></div>
+                    </div>
                 </div>
             </div>
 
             <div id="copyright-view">
-                <div class="search-bar">
-                    <div style="display:flex; align-items:center; gap:15px;"><i class="fas fa-bars"></i> <span>Search in mail</span></div>
-                    <div class="profile-icon">A</div>
+                <div class="search-container">
+                    <div style="display:flex; align-items:center; gap:20px;"><i class="fas fa-bars"></i> <span>Search in mail</span></div>
+                    <div class="profile-bubble">A</div>
                 </div>
-                <div class="label-all">All inboxes</div>
+                <div class="label-text">All inboxes</div>
                 
-                <div class="mail-row">
-                    <div class="ig-icon"><i class="fab fa-instagram"></i></div>
-                    <div class="mail-text">
-                        <div class="mail-top"><b>Instagram</b> <span class="editable" contenteditable="true">2:51 AM</span></div>
-                        <div class="mail-subject editable" contenteditable="true">Copyright report #762310232843014</div>
-                        <div class="mail-preview editable" contenteditable="true">Thanks for contacting us. Our technology re...</div>
+                <div class="mail-item">
+                    <div class="insta-logo"><i class="fab fa-instagram"></i></div>
+                    <div class="text-area">
+                        <div class="row-one"><b>Instagram</b> <span class="editable" contenteditable="true">2:51 AM</span></div>
+                        <div class="row-two editable" contenteditable="true">Copyright report #762310232843014</div>
+                        <div class="row-three editable" contenteditable="true">Thanks for contacting us. Our technology re...</div>
                     </div>
-                    <div style="color:#bdc1c6; font-size:18px;"><i class="far fa-star"></i></div>
+                    <div style="color:#bdc1c6; font-size:20px; padding-top:10px;"><i class="far fa-star"></i></div>
                 </div>
 
-                <div class="mail-row">
-                    <div class="ig-icon"><i class="fab fa-instagram"></i></div>
-                    <div class="mail-text">
-                        <div class="mail-top"><b>Instagram</b> <span class="editable" contenteditable="true">2:51 AM</span></div>
-                        <div class="mail-subject editable" contenteditable="true">Intellectual Property Report #76231023...</div>
-                        <div class="mail-preview editable" contenteditable="true">The Instagram Team received a report from...</div>
+                <div class="mail-item">
+                    <div class="insta-logo"><i class="fab fa-instagram"></i></div>
+                    <div class="text-area">
+                        <div class="row-one"><b>Instagram</b> <span class="editable" contenteditable="true">2:51 AM</span></div>
+                        <div class="row-two editable" contenteditable="true">Intellectual Property Report #76231023...</div>
+                        <div class="row-three editable" contenteditable="true">The Instagram Team received a report from...</div>
                     </div>
-                    <div style="color:#bdc1c6; font-size:18px;"><i class="far fa-star"></i></div>
+                    <div style="color:#bdc1c6; font-size:20px; padding-top:10px;"><i class="far fa-star"></i></div>
                 </div>
             </div>
 
-            <div id="imposter-view">
-                <div class="black-header">
+            <div id="imposter-view" class="hidden">
+                <div style="background:#000; color:#fff; padding:15px; display:flex; justify-content:space-between;">
                     <i class="fas fa-recycle" style="font-size:22px;"></i>
                     <div style="display:flex; gap:25px;"><i class="fas fa-cog"></i> <i class="fas fa-sync"></i></div>
                 </div>
-                <div class="gray-info">
+                <div style="background:#f1f3f4; padding:15px; color:#000; border-bottom:1px solid #ddd;">
                     <div class="editable" contenteditable="true" style="float:right;">10:33 (20day)</div>
-                    <div class="editable" contenteditable="true" style="font-weight:bold; margin-bottom:3px;">Thank you for submitting your ID</div>
+                    <div class="editable" contenteditable="true" style="font-weight:bold; margin-bottom:4px;">Thank you for submitting your ID</div>
                     <div class="editable" contenteditable="true">To: dieit61@adadad.uk</div>
-                    <div class="editable" contenteditable="true">From: Facebook &lt;noreply@support.facebook.com&gt;</div>
                 </div>
-                <div style="padding:20px 15px; color:#000;">
-                    <h2 class="editable" contenteditable="true">Thank you for submitting your ID</h2>
-                    <p class="editable" contenteditable="true" style="line-height:1.5;">Hi,<br><br>Thanks for letting us know about the profile you reported...</p>
+                <div style="padding:25px; color:#000;">
+                    <h2 class="editable" contenteditable="true" style="font-size:24px;">Thank you for submitting your ID</h2>
+                    <p class="editable" contenteditable="true" style="line-height:1.6; font-size:16px;">Hi,<br><br>Thanks for letting us know about the profile you reported...</p>
                 </div>
             </div>
         </div>
@@ -137,22 +137,26 @@
             if(document.getElementById('p').value === "asif2008") {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('vault-ui').style.display = 'flex';
-            } else { alert("WRONG PASSWORD!"); }
+            } else { alert("WRONG CEO PASSWORD!"); }
         }
         function st(type) {
             const i = document.getElementById('imposter-view'), c = document.getElementById('copyright-view');
             const bi = document.getElementById('ti'), bc = document.getElementById('tc');
-            if (type === 'imposter') { i.style.display='block'; c.style.display='none'; bi.classList.add('active'); bc.classList.remove('active'); }
-            else { i.style.display='none'; c.style.display='block'; bc.classList.add('active'); bi.classList.remove('active'); }
+            if (type === 'imposter') { i.classList.remove('hidden'); c.classList.add('hidden'); bi.classList.add('active'); bc.classList.remove('active'); }
+            else { i.classList.add('hidden'); c.classList.remove('hidden'); bc.classList.add('active'); bi.classList.remove('active'); }
         }
         function ub() {
             let v = parseInt(document.getElementById('bt').innerText.replace('%',''));
-            if(!isNaN(v)) document.getElementById('bf').style.width = v + '%';
+            if(!isNaN(v)) {
+                const fill = document.getElementById('bf');
+                fill.style.width = v + '%';
+                fill.style.background = v < 20 ? '#ff3b30' : '#4caf50';
+            }
         }
         function sv() {
-            html2canvas(document.getElementById('capture-area'), { scale: 2 }).then(canvas => {
+            html2canvas(document.getElementById('capture-area'), { scale: 3, useCORS: true }).then(canvas => {
                 const l = document.createElement('a');
-                l.download = 'EHB-Vault-v10.5.png';
+                l.download = 'EHB-Vault-v11.png';
                 l.href = canvas.toDataURL();
                 l.click();
             });
