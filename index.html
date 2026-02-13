@@ -3,166 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EHB | Master Vault v23.0</title>
+    <title>EHB | Full Gmail Hub v3.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #00ffcc; --blue-link: #8ab4f8; --profile-brown: #795548; --search-bg: #f0f4f9; }
-        body, html { margin: 0; padding: 0; background: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; height: 100%; width: 100%; overflow: hidden; }
+        body { background-color: #000; color: #fff; font-family: 'Roboto', sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
         
-        /* 🔒 Login Screen Logic */
-        #login-box { height: 100vh; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000; z-index: 2000; position: absolute; top: 0; left: 0; }
-        #login-box h2 { color: var(--accent); margin-bottom: 20px; font-family: 'Courier New', monospace; }
-        .login-input { padding: 15px; background: #111; border: 2px solid #333; color: #fff; border-radius: 10px; margin-bottom: 15px; text-align: center; width: 70%; max-width: 300px; outline: none; }
-        .login-input:focus { border-color: var(--accent); }
-        .unlock-btn { padding: 12px 40px; background: var(--accent); border: none; border-radius: 30px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        /* 🔒 CEO Login */
+        #login-box { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; position: absolute; background: #000; z-index: 1000; }
+        .login-input { padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; margin-bottom: 10px; text-align: center; }
+        .login-btn { background: #00ffcc; border: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; }
 
-        /* 📱 Main UI Structure */
-        #main-ui { display: none; height: 100%; width: 100%; flex-direction: column; }
-        .top-tabs { display: flex; background: #000; padding: 10px; gap: 10px; flex-shrink: 0; border-bottom: 1px solid #222; }
-        .tab-btn { flex: 1; padding: 12px; border: none; background: #1a1a1a; color: #888; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
-        .tab-btn.active { background: var(--accent); color: #000; }
-
-        #capture-area { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; width: 100%; background: #fff; }
-        .editable { outline: none; }
-
-        /* 🔋 Precise iOS Status Bar */
-        #ios-bar { display: none; justify-content: space-between; padding: 12px 25px 5px 25px; background: #fff; color: #000; font-size: 15px; font-weight: 600; align-items: center; flex-shrink: 0; }
-        .ios-right { display: flex; align-items: center; gap: 5px; }
-        .ios-battery { width: 25px; height: 12px; border: 1px solid #000; border-radius: 4px; padding: 1px; position: relative; display: flex; align-items: center; }
-        .ios-fill { height: 100%; background: #4cd964; border-radius: 2px; transition: width 0.3s; }
-        .ios-battery::after { content: ''; position: absolute; right: -3px; top: 3.5px; width: 2px; height: 4px; background: #000; border-radius: 0 1px 1px 0; }
-
-        /* --- 📄 IMPOSTER VIEW (White + iOS Bar) --- */
-        #imposter-view { display: none; flex-direction: column; background: #fff; color: #000; min-height: 100%; }
-        .imp-header-black { background: #000; color: #fff; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; }
-        .imp-info-gray { background: #f1f3f4; padding: 15px 18px; border-bottom: 1px solid #ddd; font-size: 14px; }
-
-        /* --- 📄 COPYRIGHT VIEW (Dark + No Bar) --- */
-        #copyright-view { display: flex; flex-direction: column; background: #000; color: #e8eaed; min-height: 100%; }
-        .cp-header-icons { display: flex; justify-content: space-between; padding: 15px 20px; font-size: 18px; color: #fff; align-items: center; }
-        .cp-body { font-size: 15px; line-height: 1.6; color: #bdc1c6; padding: 15px 20px; border-top: 1px solid #333; }
-        .cp-link { color: var(--blue-link); text-decoration: none; word-break: break-all; display: block; margin: 8px 0; }
-
-        .footer-action { padding: 15px; background: #000; flex-shrink: 0; }
-        .save-btn { width: 100%; padding: 18px; background: var(--accent); border: none; border-radius: 35px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; }
+        /* 📱 Main Tool */
+        #report-tool { display: none; width: 100%; max-width: 420px; background-color: #000; }
+        .gm-header { display: flex; justify-content: space-between; padding: 15px; font-size: 20px; color: #e8eaed; }
+        .gm-subject { font-size: 22px; font-weight: 500; padding: 10px 15px; color: #e8eaed; outline: none; word-wrap: break-word; }
+        .gm-sender { display: flex; align-items: center; padding: 10px 15px; margin-bottom: 15px; }
+        .gm-avatar { width: 45px; height: 45px; background-color: #d81b60; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 22px; margin-right: 15px; }
+        .gm-meta { font-size: 14px; color: #9aa0a6; flex-grow: 1; line-height: 1.4; }
+        .gm-meta b { color: #fff; }
+        
+        .gm-content { font-size: 15px; line-height: 1.6; color: #bdc1c6; padding: 20px 15px; border-top: 1px solid #333; outline: none; }
+        .blue-link { color: #8ab4f8; text-decoration: none; word-break: break-all; display: block; margin: 5px 0 15px 0; font-size: 13px; }
+        
+        .gm-footer { display: flex; gap: 10px; padding: 20px 15px; }
+        .f-btn { flex: 1; border: 1px solid #5f6368; padding: 12px; text-align: center; border-radius: 25px; font-size: 14px; color: #bdc1c6; }
+        .save-btn { background: #00ffcc; color: #000; font-weight: bold; padding: 18px; border-radius: 35px; width: 90%; margin: 20px auto; border: none; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
     <div id="login-box">
-        <h2>EHB CEO VAULT</h2>
-        <input type="password" id="pass-field" class="login-input" placeholder="Enter CEO Password" autofocus>
-        <button onclick="attemptUnlock()" class="unlock-btn">Unlock Vault</button>
-        <p id="error-msg" style="color: red; margin-top: 10px; font-size: 12px; display: none;">INCORRECT PASSWORD!</p>
+        <h2 style="color:#00ffcc;">CEO ACCESS REQUIRED</h2>
+        <input type="password" id="pass" class="login-input" placeholder="Enter Password">
+        <button onclick="unlock()" class="login-btn">ACCESS HUB</button>
     </div>
 
-    <div id="main-ui">
-        <div class="top-tabs">
-            <button id="ti" class="tab-btn" onclick="switchMode('imposter')">Imposter (iOS Bar)</button>
-            <button id="tc" class="tab-btn active" onclick="switchMode('copyright')">Copyright (No Bar)</button>
-        </div>
-
-        <div id="capture-area">
-            <div id="ios-bar">
-                <div class="editable" contenteditable="true">9:23</div>
-                <div class="ios-right">
-                    <i class="fas fa-signal"></i>
-                    <span style="font-size: 12px; margin: 0 2px;">4G</span>
-                    <i class="fas fa-wifi"></i>
-                    <span id="bat-text" class="editable" contenteditable="true" oninput="liveBattery()">48%</span>
-                    <div class="ios-battery"><div id="bat-fill" class="ios-fill" style="width:48%;"></div></div>
-                </div>
+    <div id="report-tool">
+        <div id="capture-zone" style="background:#000; padding-bottom: 10px;">
+            <div class="gm-header">
+                <span>←</span>
+                <div><span>📥</span> <span style="margin-left:22px;">🗑️</span> <span style="margin-left:22px;">✉️</span> <span style="margin-left:22px;">⋮</span></div>
             </div>
 
-            <div id="imposter-view">
-                <div class="imp-header-black">
-                    <i class="fas fa-recycle" style="font-size:24px;"></i>
-                    <div style="display:flex; gap:25px;"><i class="fas fa-cog"></i> <i class="fas fa-sync"></i></div>
+            <div class="gm-subject" contenteditable="true">Copyright Report Form #2013097692821390</div>
+
+            <div class="gm-sender">
+                <div class="gm-avatar">F</div>
+                <div class="gm-meta">
+                    <b>Facebook</b> <span contenteditable="true">4:48 PM</span><br>
+                    to me ▾
                 </div>
-                <div class="imp-info-gray">
-                    <div class="editable" contenteditable="true" style="float:right;">23:54 (27day)</div>
-                    <div class="editable" contenteditable="true" style="font-weight:bold; font-size:16px;">Thank you for submitting your ID</div>
-                    <div class="editable" contenteditable="true">To: didarkhan@haren.uk</div>
-                </div>
-                <div style="padding:25px 20px; color:#000;">
-                    <div class="editable" contenteditable="true" style="font-size:24px; font-weight:900; margin-bottom:15px;">Thank you for submitting your ID</div>
-                    <p class="editable" contenteditable="true" style="font-size:16px; line-height:1.5;">Hi,<br><br>Thanks for letting us know about the profile you reported...</p>
-                </div>
+                <div style="color:#9aa0a6;">↩️ ⋮</div>
             </div>
 
-            <div id="copyright-view">
-                <div class="cp-header-icons">
-                    <span>←</span>
-                    <div style="display:flex; gap:22px;">
-                        <span><i class="fas fa-archive" style="color:#ff8a65;"></i></span>
-                        <span><i class="fas fa-trash"></i></span>
-                        <span><i class="fas fa-envelope"></i></span>
-                        <span><i class="fas fa-ellipsis-v"></i></span>
-                    </div>
-                </div>
-                <div class="cp-subject editable" contenteditable="true">Copyright Report Form #2513697692821397</div>
-                <div class="cp-body editable" contenteditable="true">
-                    Thanks for contacting us. We removed the content you've reported...
-                </div>
+            <div class="gm-content" contenteditable="true">
+                Thanks for contacting us. We removed the content you've reported for violating our Terms. We understand this action to resolve your intellectual property issue.<br><br>
+                If you'd like to retract your report, please fill out the appropriate retraction form:<br>
+                <span class="blue-link">https://www.facebook.com/help/contact/237593160842825?original_report=2013097692821390</span>
+                <span class="blue-link">https://help.instagram.com/contact/3373960976225657?original_report=2013097692821390</span><br>
+                For more information about retractions, please visit our Help Centers:<br>
+                <span class="blue-link">https://www.facebook.com/help/1206218382801108?ref=cr</span>
+                <span class="blue-link">https://help.instagram.com/275268756304020?ref=cr</span><br>
+                If you'd like to report something else, please submit a new report:<br>
+                <span class="blue-link">https://www.facebook.com/help/contact/...</span><br>
+                Reference: <span class="blue-link" style="display:inline;">#2013097692821390</span>.<br><br>
+                Thanks,<br>Meta
+            </div>
+
+            <div class="gm-footer">
+                <div class="f-btn">↩️ Reply</div>
+                <div class="f-btn">↪️ Forward</div>
             </div>
         </div>
-
-        <div class="footer-action">
-            <button class="save-btn" onclick="captureFinal()">📸 SAVE SCREENSHOT</button>
-        </div>
+        <button class="save-btn" onclick="takeShot()">📸 SAVE FULL SCREENSHOT (v3.0)</button>
     </div>
 
     <script>
-        // 🔒 AUTH LOGIC (CEO FIXED)
-        const passField = document.getElementById('pass-field');
-        
-        // Listen for Enter key
-        passField.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") { attemptUnlock(); }
-        });
-
-        function attemptUnlock() {
-            const inputVal = passField.value;
-            if (inputVal === "asif2008") {
+        function unlock() {
+            // CEO Password validation
+            if(document.getElementById('pass').value === "asif2008") {
                 document.getElementById('login-box').style.display = 'none';
-                document.getElementById('main-ui').style.display = 'flex';
-                console.log("Access Granted, CEO.");
-            } else {
-                document.getElementById('error-msg').style.display = 'block';
-                setTimeout(() => { document.getElementById('error-msg').style.display = 'none'; }, 2000);
-            }
+                document.getElementById('report-tool').style.display = 'block';
+            } else { alert("ACCESS DENIED, CEO!"); }
         }
-
-        // --- UI LOGIC ---
-        function switchMode(mode) {
-            const imp = document.getElementById('imposter-view'), cp = document.getElementById('copyright-view');
-            const ti = document.getElementById('ti'), tc = document.getElementById('tc'), ios = document.getElementById('ios-bar');
-            if (mode === 'imposter') {
-                imp.style.display = 'flex'; cp.style.display = 'none'; ios.style.display = 'flex';
-                ti.classList.add('active'); tc.classList.remove('active');
-            } else {
-                imp.style.display = 'none'; cp.style.display = 'flex'; ios.style.display = 'none';
-                tc.classList.add('active'); ti.classList.remove('active');
-            }
-        }
-
-        function liveBattery() {
-            let v = parseInt(document.getElementById('bat-text').innerText.replace('%',''));
-            if(!isNaN(v)) {
-                document.getElementById('bat-fill').style.width = v + '%';
-                document.getElementById('bat-fill').style.background = v < 20 ? '#ff3b30' : '#4cd964';
-            }
-        }
-
-        function captureFinal() {
-            const el = document.getElementById('capture-area');
-            const originalOverflow = el.style.overflow;
-            el.style.overflow = 'visible';
-            html2canvas(el, { scale: 3, useCORS: true, windowHeight: el.scrollHeight }).then(canvas => {
-                el.style.overflow = originalOverflow;
+        function takeShot() {
+            const el = document.getElementById('capture-zone');
+            html2canvas(el, { backgroundColor: '#000', scale: 3 }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'EHB-Vault-Fixed.png';
+                link.download = 'EHB-Full-Gmail-Report.png';
                 link.href = canvas.toDataURL();
                 link.click();
             });
