@@ -3,25 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EHB | Master Full Vault</title>
+    <title>EHB | Fixed Full Vault v14.5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --accent: #00ffcc; --blue-link: #8ab4f8; }
         body, html { margin: 0; padding: 0; background: #000; font-family: 'Roboto', sans-serif; height: 100%; overflow: hidden; }
         
-        /* 🔒 Login Screen */
         #login-box { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000; z-index: 1000; position: relative; }
         input { padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; margin-bottom: 10px; text-align: center; outline: none; }
 
-        /* 📱 UI Structure */
         #main-ui { display: none; height: 100%; flex-direction: column; }
-        .top-nav { display: flex; background: #000; padding: 10px; gap: 10px; border-bottom: 1px solid #222; }
+        .top-nav { display: flex; background: #000; padding: 10px; gap: 10px; border-bottom: 1px solid #222; flex-shrink: 0; }
         .nav-btn { flex: 1; padding: 12px; border: none; background: #1a1a1a; color: #888; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .nav-btn.active { background: var(--accent); color: #000; }
 
-        /* 📸 Full Email Content Area */
-        #capture-area { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; background: #000; }
+        /* 📸 Capture Area - Important for the fix */
+        #capture-area { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; background: #000; position: relative; }
         .editable { outline: none; }
 
         /* 🔋 Dynamic Status Bar */
@@ -30,35 +28,32 @@
         .bat-shell { width: 25px; height: 12px; border: 1.5px solid #fff; border-radius: 4px; padding: 1px; position: relative; }
         .bat-fill { height: 100%; background: #fff; transition: width 0.3s; }
 
-        /* ================= COPYRIGHT TEMPLATE (BIG & FULL) ================= */
-        #copyright-temp { display: block; color: #e8eaed; }
+        /* ================= 2. COPYRIGHT VIEW (Dark - BIG) ================= */
+        #copyright-temp { display: block; color: #e8eaed; background: #000; }
         .cp-head { display: flex; justify-content: space-between; padding: 15px; font-size: 20px; }
         .cp-subject { font-size: 22px; font-weight: 500; padding: 10px 15px; }
         .cp-sender-row { display: flex; align-items: center; padding: 10px 15px; margin-bottom: 15px; }
         .cp-avatar { width: 45px; height: 45px; background: #e91e63; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; margin-right: 15px; }
         .cp-body { font-size: 15px; line-height: 1.6; color: #bdc1c6; padding: 15px; border-top: 1px solid #333; }
         .link { color: var(--blue-link); text-decoration: none; word-break: break-all; display: block; margin: 5px 0; }
+        .gmail-footer { display: flex; gap: 10px; padding: 20px 15px; border-top: 1px solid #333; margin-top: 20px; }
+        .f-btn { flex: 1; border: 1px solid #5f6368; padding: 12px; text-align: center; border-radius: 25px; font-size: 14px; color: #bdc1c6; }
 
-        /* ================= IMPOSTER TEMPLATE (FULL) ================= */
+        /* ================= 1. IMPOSTER VIEW (White - FULL) ================= */
         #imposter-temp { display: none; background: #fff; color: #000; min-height: 100%; }
         .imp-header { background: #000; color: #fff; padding: 12px 15px; display: flex; justify-content: space-between; }
         .imp-gray-box { background: #f1f3f4; padding: 15px; border-bottom: 1px solid #ddd; color: #000; font-size: 14px; }
         .imp-content { padding: 25px 20px; }
 
-        /* Gmail Bottom Bar */
-        .gmail-footer { display: flex; gap: 10px; padding: 20px 15px; border-top: 1px solid #333; margin-top: 20px; }
-        .f-btn { flex: 1; border: 1px solid #5f6368; padding: 12px; text-align: center; border-radius: 25px; font-size: 14px; color: #bdc1c6; }
-
-        /* Save Button */
+        /* Save Button Area */
         .action-area { padding: 12px; background: #000; flex-shrink: 0; }
         .save-btn { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 35px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; }
-        .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <div id="login-box">
-        <h2 style="color:var(--accent);">EHB CEO VAULT v14.0</h2>
+        <h2 style="color:var(--accent);">EHB CEO VAULT v14.5</h2>
         <input type="password" id="pass" placeholder="Enter Password">
         <button onclick="unlock()" style="padding:12px 30px; background:var(--accent); border:none; border-radius:25px; font-weight:bold; cursor:pointer;">ACCESS</button>
     </div>
@@ -134,7 +129,7 @@
         </div>
 
         <div class="action-area">
-            <button class="save-btn" onclick="save()">📸 SAVE FULL SCREENSHOT</button>
+            <button class="save-btn" onclick="save()">📸 SAVE FULL SCREENSHOT (FIXED)</button>
         </div>
     </div>
 
@@ -161,11 +156,27 @@
             let v = parseInt(document.getElementById('perc').innerText.replace('%',''));
             if(!isNaN(v)) document.getElementById('fill').style.width = v + '%';
         }
+
+        // 🛠️ THE FIX FOR CUT-OFF SCREENSHOTS 🛠️
         function save() {
-            html2canvas(document.getElementById('capture-area'), { scale: 2 }).then(canvas => {
+            const captureElement = document.getElementById('capture-area');
+            
+            // Temporary style changes to force full height capture
+            const originalOverflow = captureElement.style.overflow;
+            captureElement.style.overflow = 'visible'; // Allow expansion
+            
+            html2canvas(captureElement, { 
+                scale: 3, // High resolution
+                useCORS: true, // Ensure images load
+                scrollY: -window.scrollY, // Handle scrolling positioning
+                windowHeight: captureElement.scrollHeight // Tell canvas the full height
+            }).then(canvas => {
+                // Restore original styles immediately
+                captureElement.style.overflow = originalOverflow;
+
                 const link = document.createElement('a');
-                link.download = 'EHB-Full-Email-v14.png';
-                link.href = canvas.toDataURL();
+                link.download = 'EHB-Fixed-Full-v14.5.png';
+                link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             });
         }
