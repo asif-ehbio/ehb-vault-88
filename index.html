@@ -3,25 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EHB | Master Vault v22.0</title>
+    <title>EHB | Master Vault v23.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #00ffcc; --blue-link: #8ab4f8; }
+        :root { --accent: #00ffcc; --blue-link: #8ab4f8; --profile-brown: #795548; --search-bg: #f0f4f9; }
         body, html { margin: 0; padding: 0; background: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; height: 100%; width: 100%; overflow: hidden; }
         
-        #login-box { height: 100vh; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000; z-index: 2000; position: absolute; }
-        input { padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; margin-bottom: 12px; text-align: center; }
+        /* 🔒 Login Screen Logic */
+        #login-box { height: 100vh; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #000; z-index: 2000; position: absolute; top: 0; left: 0; }
+        #login-box h2 { color: var(--accent); margin-bottom: 20px; font-family: 'Courier New', monospace; }
+        .login-input { padding: 15px; background: #111; border: 2px solid #333; color: #fff; border-radius: 10px; margin-bottom: 15px; text-align: center; width: 70%; max-width: 300px; outline: none; }
+        .login-input:focus { border-color: var(--accent); }
+        .unlock-btn { padding: 12px 40px; background: var(--accent); border: none; border-radius: 30px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
+        /* 📱 Main UI Structure */
         #main-ui { display: none; height: 100%; width: 100%; flex-direction: column; }
         .top-tabs { display: flex; background: #000; padding: 10px; gap: 10px; flex-shrink: 0; border-bottom: 1px solid #222; }
         .tab-btn { flex: 1; padding: 12px; border: none; background: #1a1a1a; color: #888; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
         .tab-btn.active { background: var(--accent); color: #000; }
 
-        #capture-area { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; width: 100%; }
+        #capture-area { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; width: 100%; background: #fff; }
         .editable { outline: none; }
 
-        /* --- 🔋 iOS STATUS BAR (For Imposter Only) --- */
+        /* 🔋 Precise iOS Status Bar */
         #ios-bar { display: none; justify-content: space-between; padding: 12px 25px 5px 25px; background: #fff; color: #000; font-size: 15px; font-weight: 600; align-items: center; flex-shrink: 0; }
         .ios-right { display: flex; align-items: center; gap: 5px; }
         .ios-battery { width: 25px; height: 12px; border: 1px solid #000; border-radius: 4px; padding: 1px; position: relative; display: flex; align-items: center; }
@@ -32,14 +37,10 @@
         #imposter-view { display: none; flex-direction: column; background: #fff; color: #000; min-height: 100%; }
         .imp-header-black { background: #000; color: #fff; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; }
         .imp-info-gray { background: #f1f3f4; padding: 15px 18px; border-bottom: 1px solid #ddd; font-size: 14px; }
-        .imp-content { padding: 25px 20px; }
 
-        /* --- 📄 COPYRIGHT VIEW (Dark + NO BAR) --- */
+        /* --- 📄 COPYRIGHT VIEW (Dark + No Bar) --- */
         #copyright-view { display: flex; flex-direction: column; background: #000; color: #e8eaed; min-height: 100%; }
         .cp-header-icons { display: flex; justify-content: space-between; padding: 15px 20px; font-size: 18px; color: #fff; align-items: center; }
-        .cp-subject { font-size: 22px; font-weight: 500; padding: 10px 20px; word-wrap: break-word; }
-        .cp-sender { display: flex; align-items: center; padding: 10px 20px; margin-bottom: 15px; }
-        .cp-avatar { width: 45px; height: 45px; background: #e91e63; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; margin-right: 15px; flex-shrink: 0; }
         .cp-body { font-size: 15px; line-height: 1.6; color: #bdc1c6; padding: 15px 20px; border-top: 1px solid #333; }
         .cp-link { color: var(--blue-link); text-decoration: none; word-break: break-all; display: block; margin: 8px 0; }
 
@@ -50,11 +51,122 @@
 <body>
 
     <div id="login-box">
-        <h2 style="color:var(--accent);">EHB CEO VAULT v22.0</h2>
-        <input type="password" id="pass" placeholder="Enter Password">
-        <button onclick="unlock()" style="padding:12px 30px; background:var(--accent); border:none; border-radius:20px; font-weight:bold;">ACCESS HUB</button>
+        <h2>EHB CEO VAULT</h2>
+        <input type="password" id="pass-field" class="login-input" placeholder="Enter CEO Password" autofocus>
+        <button onclick="attemptUnlock()" class="unlock-btn">Unlock Vault</button>
+        <p id="error-msg" style="color: red; margin-top: 10px; font-size: 12px; display: none;">INCORRECT PASSWORD!</p>
     </div>
 
     <div id="main-ui">
         <div class="top-tabs">
-            <button id="
+            <button id="ti" class="tab-btn" onclick="switchMode('imposter')">Imposter (iOS Bar)</button>
+            <button id="tc" class="tab-btn active" onclick="switchMode('copyright')">Copyright (No Bar)</button>
+        </div>
+
+        <div id="capture-area">
+            <div id="ios-bar">
+                <div class="editable" contenteditable="true">9:23</div>
+                <div class="ios-right">
+                    <i class="fas fa-signal"></i>
+                    <span style="font-size: 12px; margin: 0 2px;">4G</span>
+                    <i class="fas fa-wifi"></i>
+                    <span id="bat-text" class="editable" contenteditable="true" oninput="liveBattery()">48%</span>
+                    <div class="ios-battery"><div id="bat-fill" class="ios-fill" style="width:48%;"></div></div>
+                </div>
+            </div>
+
+            <div id="imposter-view">
+                <div class="imp-header-black">
+                    <i class="fas fa-recycle" style="font-size:24px;"></i>
+                    <div style="display:flex; gap:25px;"><i class="fas fa-cog"></i> <i class="fas fa-sync"></i></div>
+                </div>
+                <div class="imp-info-gray">
+                    <div class="editable" contenteditable="true" style="float:right;">23:54 (27day)</div>
+                    <div class="editable" contenteditable="true" style="font-weight:bold; font-size:16px;">Thank you for submitting your ID</div>
+                    <div class="editable" contenteditable="true">To: didarkhan@haren.uk</div>
+                </div>
+                <div style="padding:25px 20px; color:#000;">
+                    <div class="editable" contenteditable="true" style="font-size:24px; font-weight:900; margin-bottom:15px;">Thank you for submitting your ID</div>
+                    <p class="editable" contenteditable="true" style="font-size:16px; line-height:1.5;">Hi,<br><br>Thanks for letting us know about the profile you reported...</p>
+                </div>
+            </div>
+
+            <div id="copyright-view">
+                <div class="cp-header-icons">
+                    <span>←</span>
+                    <div style="display:flex; gap:22px;">
+                        <span><i class="fas fa-archive" style="color:#ff8a65;"></i></span>
+                        <span><i class="fas fa-trash"></i></span>
+                        <span><i class="fas fa-envelope"></i></span>
+                        <span><i class="fas fa-ellipsis-v"></i></span>
+                    </div>
+                </div>
+                <div class="cp-subject editable" contenteditable="true">Copyright Report Form #2513697692821397</div>
+                <div class="cp-body editable" contenteditable="true">
+                    Thanks for contacting us. We removed the content you've reported...
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-action">
+            <button class="save-btn" onclick="captureFinal()">📸 SAVE SCREENSHOT</button>
+        </div>
+    </div>
+
+    <script>
+        // 🔒 AUTH LOGIC (CEO FIXED)
+        const passField = document.getElementById('pass-field');
+        
+        // Listen for Enter key
+        passField.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") { attemptUnlock(); }
+        });
+
+        function attemptUnlock() {
+            const inputVal = passField.value;
+            if (inputVal === "asif2008") {
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('main-ui').style.display = 'flex';
+                console.log("Access Granted, CEO.");
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+                setTimeout(() => { document.getElementById('error-msg').style.display = 'none'; }, 2000);
+            }
+        }
+
+        // --- UI LOGIC ---
+        function switchMode(mode) {
+            const imp = document.getElementById('imposter-view'), cp = document.getElementById('copyright-view');
+            const ti = document.getElementById('ti'), tc = document.getElementById('tc'), ios = document.getElementById('ios-bar');
+            if (mode === 'imposter') {
+                imp.style.display = 'flex'; cp.style.display = 'none'; ios.style.display = 'flex';
+                ti.classList.add('active'); tc.classList.remove('active');
+            } else {
+                imp.style.display = 'none'; cp.style.display = 'flex'; ios.style.display = 'none';
+                tc.classList.add('active'); ti.classList.remove('active');
+            }
+        }
+
+        function liveBattery() {
+            let v = parseInt(document.getElementById('bat-text').innerText.replace('%',''));
+            if(!isNaN(v)) {
+                document.getElementById('bat-fill').style.width = v + '%';
+                document.getElementById('bat-fill').style.background = v < 20 ? '#ff3b30' : '#4cd964';
+            }
+        }
+
+        function captureFinal() {
+            const el = document.getElementById('capture-area');
+            const originalOverflow = el.style.overflow;
+            el.style.overflow = 'visible';
+            html2canvas(el, { scale: 3, useCORS: true, windowHeight: el.scrollHeight }).then(canvas => {
+                el.style.overflow = originalOverflow;
+                const link = document.createElement('a');
+                link.download = 'EHB-Vault-Fixed.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>
